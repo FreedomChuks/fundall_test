@@ -22,6 +22,7 @@ buildscript {
         retrofit = '2.6.1'
         koin_version = '2.0.1'
         circle_image='3.0.1'
+        lottie_verson="3.0.7"
 
     }
 

@@ -17,6 +17,7 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
 
     //to standerd error handing just not to increase complesity
     suspend fun LoginUser(email:String,password:String){
+
         withContext(IO){
             try {
 
@@ -24,9 +25,9 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
                 val response= api.login(email, password)
                 if (response.isSuccessful){
                     usersession.set(response.body())
+                    return@withContext
                 }
                 usersession.error(response.message())
-                usersession.clear()
             }catch (e:Exception){
                usersession.error(e.localizedMessage!!)
             }catch (h: HttpException){
@@ -45,6 +46,7 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
                 val response= api.register(firstname,lastname,email, password, confirmpassword)
                 if (response.isSuccessful){
                     usersession.set(response.body())
+                    return@withContext
                 }
                 usersession.error(response.message())
                 usersession.clear()

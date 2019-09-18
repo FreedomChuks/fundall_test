@@ -2,9 +2,7 @@ package com.freedom.fundall.api
 
 import com.freedom.fundall.model.AuthResponse
 import retrofit2.Response
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiServices {
 
@@ -18,5 +16,10 @@ interface ApiServices {
     suspend fun register(@Field("firstname")firstname:String,@Field("lastname")lastname:String,
                          @Field("email")email: String,@Field("password")password: String,@Field("password_confirmation")confirmpassword:String
     ):Response<AuthResponse>
+
+
+    @GET("base/profile")
+    @Headers("Authorization: Bearer")
+    suspend fun getUser():Response<AuthResponse>
 
 }
