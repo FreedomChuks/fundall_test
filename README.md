@@ -4,7 +4,7 @@ a test project for fundall
 * Glide image loaing libary
 * Retrofit Networking lib
 * Koin kotlin dependency injection lib
-* * Navigation Components (Jet pack components)
+* Navigation Components (Jet pack components)
 
 # Architecture used
 * Mvvm (Android architecture component) 
