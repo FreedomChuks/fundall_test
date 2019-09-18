@@ -24,7 +24,8 @@
         </activity>
         <activity android:name=".ui.auth.Register" />
         <activity android:name=".ui.auth.Login" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Account_style">
         </activity>
     </application>
 

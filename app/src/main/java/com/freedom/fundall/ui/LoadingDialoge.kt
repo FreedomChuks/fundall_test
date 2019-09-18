@@ -18,10 +18,9 @@ class LoadingDialoge:DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view:View= View.inflate(context,R.layout.loadingdialog,container)
-        Glide.with(view).load(R.drawable.loader).into(loader)
+        val view:View=inflater.inflate(R.layout.loadingdialog,container,false)
+//        Glide.with(context!!).load(R.drawable.loader).into(loader_view)
         return view
-//        inflater.inflate(R.layout.loadingdialog,container,false)
     }
 }
 

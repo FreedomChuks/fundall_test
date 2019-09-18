@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/loader"
+        android:id="@+id/loader_view"
         android:layout_width="205dp"
         android:layout_height="195dp"
         android:src="@drawable/loader"
@@ -21,12 +21,10 @@
         android:fontFamily="@font/fgsemibold"
         android:text="doing some cool work..."
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/loader"
+        app:layout_constraintBottom_toBottomOf="@+id/loader_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/loader"
-        app:layout_constraintVertical_bias="0.932" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

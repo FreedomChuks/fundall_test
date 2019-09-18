@@ -23,4 +23,9 @@
         <item name="android:windowAnimationStyle">@anim/fragment_close_exit</item>
     </style>
 
+    <style name="Account_style" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
 </resources>

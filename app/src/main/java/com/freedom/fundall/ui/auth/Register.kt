@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.freedom.fundall.R
 import com.freedom.fundall.databinding.ActivityLoginBinding
 import com.freedom.fundall.databinding.ActivityRegisterBinding
+import com.freedom.fundall.ui.LoadingDialoge
 import com.freedom.fundall.utils.Resource
 import com.freedom.fundall.utils.ViewState
 import com.freedom.fundall.utils.snackbar
@@ -26,6 +27,7 @@ class Register : AppCompatActivity(),ViewState {
     lateinit var bindings: ActivityRegisterBinding
     private val authviewmodel: AuthViewModel by viewModel()
     lateinit var viewModel: AuthViewModel
+    lateinit var  loadingDialoge: LoadingDialoge
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,18 +37,35 @@ class Register : AppCompatActivity(),ViewState {
         viewModel = ViewModelProvider(this).get(authviewmodel::class.java)
         bindings.authviewmodel = authviewmodel
         viewModel.viewState=this
+        loadingDialoge= LoadingDialoge()
         subscribeObservers()
     }
 
     fun subscribeObservers() {
         authviewmodel.respose.observe(this, Observer {
             when(it){
-                is Resource.Loading -> toast("loading")
-                is Resource.Success -> {toast("login ${it.data?.success?.status}")
-                    Log.d("any","========login ${it.data?.success?.status}")
+                is Resource.Loading ->{
+                    showDialog()
                 }
-                is Resource.Failure -> toast("login failed")
+                is Resource.Success -> {
+                    hideLoader()
+                    toast("login ${it.data?.success?.status}")
+                }
+                is Resource.Failure ->{
+                    hideLoader()
+                    toast("login failed")
+                }
             }
         })
+    }
+
+
+
+    private fun showDialog(){
+        loadingDialoge.show(supportFragmentManager,"loadingScreen")
+    }
+
+    private fun hideLoader(){
+        loadingDialoge.dismiss()
     }
 }
