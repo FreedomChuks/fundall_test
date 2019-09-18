@@ -1,8 +1,5 @@
 # fundall_test
 a test project for fundall 
-
-# Built with Kotlin
-
 # Lib used
 * Glide image loaing libary
 * Retrofit Networking lib
