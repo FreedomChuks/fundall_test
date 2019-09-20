@@ -103,6 +103,7 @@ return@start
             when(it){
                 is Resource.Loading -> {showDialog()}
                 is Resource.Success -> {
+                    hideLoader()
                     context?.toast("loaded data")
                     setDetails(it.data?.success?.data?.email,it.data?.success?.data?.firstname,it.data?.success?.data?.monthly_target.toString())
                     if (it.data?.success?.user?.avatar ==null){
@@ -113,7 +114,7 @@ return@start
                     }
 
                 }
-                is Resource.Failure -> context?.toast("error loading data")
+                is Resource.Failure -> {hideLoader();context?.toast("error loading data")}
             }
         })
 
