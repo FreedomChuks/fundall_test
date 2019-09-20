@@ -8,5 +8,6 @@ data class Success(
     @Expose
     val status: String,
 
+    val data: Data,
     val user: User
 )

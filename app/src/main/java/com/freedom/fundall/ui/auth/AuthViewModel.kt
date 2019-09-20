@@ -1,6 +1,6 @@
 package com.freedom.fundall.ui.auth
 
-import android.util.Log
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,18 +8,23 @@ import com.freedom.fundall.model.AuthResponse
 import com.freedom.fundall.repository.AuthRepository
 import com.freedom.fundall.utils.Resource
 import com.freedom.fundall.utils.ViewState
+import com.freedom.fundall.utils.get
 import kotlinx.coroutines.launch
 
 
-class AuthViewModel(val repository: AuthRepository):ViewModel(){
+class AuthViewModel constructor(val repository: AuthRepository):ViewModel(){
     var email:String?=null
     var password:String?=null
-    var confirm_pass:String?=null
+    var confirmPass:String?=null
     var firstname:String?=null
     var lastname:String?=null
     var viewState:ViewState?=null
+    lateinit var sharedPreferences: SharedPreferences
+    val response: LiveData<Resource<AuthResponse?>> =repository.getAuthResource()
 
-    val respose: LiveData<Resource<AuthResponse?>> =repository.getAuthResource()
+
+    val getUsername=sharedPreferences?.get("Username","data")
+    private val getEmail=sharedPreferences?.get("Username","data")
 
     fun login(){
         if (email.isNullOrEmpty()) {
@@ -36,6 +41,18 @@ class AuthViewModel(val repository: AuthRepository):ViewModel(){
         }
 
        attemptLogin()
+
+    }
+
+    fun ReLogin(){
+        if (getEmail.isNullOrEmpty()){
+            viewState?.UIErrorMessage("username cant be empty")
+            return
+        }else if(password.isNullOrEmpty()){
+            viewState?.UIErrorMessage("password cant be empty")
+            return
+        }
+        attemptLogin()
 
     }
 
@@ -56,11 +73,11 @@ class AuthViewModel(val repository: AuthRepository):ViewModel(){
         }else if(password.isNullOrEmpty()){
             viewState?.UIErrorMessage("password cant be empty")
             return
-        }else if(confirm_pass.isNullOrBlank()){
+        }else if(confirmPass.isNullOrBlank()){
             viewState?.UIErrorMessage("confirm password")
             return
         }
-        else if(!comparePassword(password!!,confirm_pass!!)){
+        else if(!comparePassword(password!!,confirmPass!!)){
             viewState?.UIErrorMessage("password doesnt match")
             return
         }
@@ -87,9 +104,12 @@ class AuthViewModel(val repository: AuthRepository):ViewModel(){
 
     fun attemptSignup(){
         viewModelScope.launch {
-            repository.SignupUser(firstname!!,lastname!!,email!!,password!!,confirm_pass!!)
+            repository.SignupUser(firstname!!,lastname!!,email!!,password!!,confirmPass!!)
         }
     }
+
+
+
 
 }
 

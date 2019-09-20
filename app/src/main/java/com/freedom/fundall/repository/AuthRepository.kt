@@ -15,7 +15,7 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
 
     fun getAuthResource():LiveData<Resource<AuthResponse?>> = usersession
 
-    //to standerd error handing just not to increase complesity
+    //to standerd error handing just not to increase complexities
     suspend fun LoginUser(email:String,password:String){
 
         withContext(IO){

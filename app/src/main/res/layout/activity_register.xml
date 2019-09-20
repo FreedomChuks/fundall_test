@@ -137,7 +137,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@={authviewmodel.confirm_pass}"
+                android:text="@={authviewmodel.confirmPass}"
                 android:fontFamily="@font/fgregular"
                 android:inputType="textPassword" />
 

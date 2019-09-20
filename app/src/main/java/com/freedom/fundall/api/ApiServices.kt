@@ -19,7 +19,10 @@ interface ApiServices {
 
 
     @GET("base/profile")
-    @Headers("Authorization: Bearer")
-    suspend fun getUser():Response<AuthResponse>
+    suspend fun getUser(@Header("Authorization")authorization:String):Response<AuthResponse>
+
+    @POST("base/profile")
+    @Headers("Content-Type","multipart/form-data")
+    suspend fun updateAvatar(@Header("Authorization") authorization: String)
 
 }

@@ -42,7 +42,7 @@ class Register : AppCompatActivity(),ViewState {
     }
 
     fun subscribeObservers() {
-        authviewmodel.respose.observe(this, Observer {
+        authviewmodel.response.observe(this, Observer {
             when(it){
                 is Resource.Loading ->{
                     showDialog()

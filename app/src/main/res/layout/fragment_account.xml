@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Account">
+    tools:context=".ui.Account.Account">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
@@ -12,7 +12,7 @@
         android:layout_height="120dp"
         android:layout_marginTop="140dp"
         android:src="@drawable/img"
-        app:civ_border_color="#FF000000"
+        app:civ_border_color="@color/colorAccent"
         app:civ_border_width="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
