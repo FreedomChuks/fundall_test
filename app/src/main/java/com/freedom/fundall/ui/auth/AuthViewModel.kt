@@ -1,8 +1,10 @@
 package com.freedom.fundall.ui.auth
 
+import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.freedom.fundall.model.AuthResponse
 import com.freedom.fundall.repository.AuthRepository
@@ -12,19 +14,25 @@ import com.freedom.fundall.utils.get
 import kotlinx.coroutines.launch
 
 
-class AuthViewModel constructor(val repository: AuthRepository):ViewModel(){
+class AuthViewModel constructor(val repository: AuthRepository,application: Application):AndroidViewModel(application){
     var email:String?=null
     var password:String?=null
     var confirmPass:String?=null
     var firstname:String?=null
     var lastname:String?=null
     var viewState:ViewState?=null
-    lateinit var sharedPreferences: SharedPreferences
+    var sharedPreferences: SharedPreferences
+    private  val context=getApplication<Application>().applicationContext
     val response: LiveData<Resource<AuthResponse?>> =repository.getAuthResource()
 
+    init {
+        sharedPreferences=context.getSharedPreferences("mypref",Context.MODE_PRIVATE)
+    }
 
-    val getUsername=sharedPreferences?.get("Username","data")
-    private val getEmail=sharedPreferences?.get("Username","data")
+    val getUsername= sharedPreferences.get("Username","data")
+    private var getEmail= sharedPreferences.get("Email","data")
+
+
 
     fun login(){
         if (email.isNullOrEmpty()) {
@@ -41,7 +49,6 @@ class AuthViewModel constructor(val repository: AuthRepository):ViewModel(){
         }
 
        attemptLogin()
-
     }
 
     fun ReLogin(){
@@ -52,7 +59,7 @@ class AuthViewModel constructor(val repository: AuthRepository):ViewModel(){
             viewState?.UIErrorMessage("password cant be empty")
             return
         }
-        attemptLogin()
+        ReattemptLogin()
 
     }
 
@@ -102,12 +109,18 @@ class AuthViewModel constructor(val repository: AuthRepository):ViewModel(){
        }
     }
 
+
+    fun ReattemptLogin(){
+        viewModelScope.launch {
+            repository.LoginUser(getEmail,password!!)
+        }
+    }
+
     fun attemptSignup(){
         viewModelScope.launch {
             repository.SignupUser(firstname!!,lastname!!,email!!,password!!,confirmPass!!)
         }
     }
-
 
 
 

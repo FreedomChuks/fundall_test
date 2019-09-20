@@ -41,7 +41,6 @@ class Login : AppCompatActivity(),ViewState {
         sharedPreferences=applicationContext.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         loadingDialoge= LoadingDialoge()
         subscribeObservers()
-
     }
 
     fun subscribeObservers() {
@@ -65,10 +64,9 @@ class Login : AppCompatActivity(),ViewState {
 
     override fun onStart() {
         super.onStart()
-        val username=sharedPreferences.getString("Username","Username")
         val AuthToken=sharedPreferences.getString("AuthToken","Token")
-        if (!username.isNullOrEmpty()){
-            Log.d("any","=========Username is not null $username+$AuthToken")
+        if (!AuthToken.isNullOrEmpty()){
+            launchActivity<mediator>()
         }else{
             Log.d("any","=========Username is null")
         }

@@ -10,11 +10,9 @@ import com.freedom.fundall.R
 import com.freedom.fundall.databinding.ActivityLoginBinding
 import com.freedom.fundall.databinding.ActivityRegisterBinding
 import com.freedom.fundall.ui.LoadingDialoge
-import com.freedom.fundall.utils.Resource
-import com.freedom.fundall.utils.ViewState
-import com.freedom.fundall.utils.snackbar
-import com.freedom.fundall.utils.toast
+import com.freedom.fundall.utils.*
 import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.coroutines.delay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -49,7 +47,8 @@ class Register : AppCompatActivity(),ViewState {
                 }
                 is Resource.Success -> {
                     hideLoader()
-                    toast("login ${it.data?.success?.status}")
+                    toast("signup successful login ")
+                    launchActivity<Login>()
                 }
                 is Resource.Failure ->{
                     hideLoader()

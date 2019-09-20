@@ -1,5 +1,7 @@
 package com.freedom.fundall.ui.auth
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -8,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.freedom.fundall.MainActivity
 import com.freedom.fundall.R
 import com.freedom.fundall.databinding.ActivityLoginBinding
+import com.freedom.fundall.databinding.ActivityMediatorBinding
 import com.freedom.fundall.ui.LoadingDialoge
 import com.freedom.fundall.utils.*
 import kotlinx.android.synthetic.main.activity_mediator.*
@@ -18,10 +21,11 @@ class mediator : AppCompatActivity(),ViewState {
         root.snackbar(message)
     }
 
-    lateinit var bindings: ActivityLoginBinding
+    lateinit var bindings: ActivityMediatorBinding
     private val authviewmodel: AuthViewModel by viewModel()
     lateinit var viewModel: AuthViewModel
     lateinit var  loadingDialoge: LoadingDialoge
+    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +34,9 @@ class mediator : AppCompatActivity(),ViewState {
         viewModel = ViewModelProvider(this).get(authviewmodel::class.java)
         bindings.authviewmodel = authviewmodel
         authviewmodel.viewState=this
+        sharedPreferences=applicationContext.getSharedPreferences("mypref", Context.MODE_PRIVATE)
         loadingDialoge= LoadingDialoge()
-
+        backtoWelcome.setOnClickListener {clearUser(); launchActivity<Login>();finish() }
         subscribeObservers()
     }
 
@@ -59,4 +64,11 @@ class mediator : AppCompatActivity(),ViewState {
         loadingDialoge.dismiss()
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
+    }
+    fun clearUser(){
+        sharedPreferences.putData("AuthToken","")
+    }
 }

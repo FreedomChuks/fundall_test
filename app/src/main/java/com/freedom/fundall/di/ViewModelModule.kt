@@ -5,6 +5,6 @@ import com.freedom.fundall.ui.auth.AuthViewModel
 import org.koin.dsl.module
 
 val viewmodelmodule= module {
-    factory { AuthViewModel(get()) }
+    factory { AuthViewModel(get(),get()) }
     factory { AccountViewModel(get()) }
 }
