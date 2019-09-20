@@ -1,6 +1,10 @@
 package com.freedom.fundall.ui.Account
 
+import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,18 +13,31 @@ import com.freedom.fundall.repository.AccountRepository
 import com.freedom.fundall.utils.Resource
 import com.freedom.fundall.utils.get
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 
-class AccountViewModel(val repository: AccountRepository): ViewModel() {
-    val getAuthUser:LiveData<Resource<AuthResponse?>> =repository.getSession()
+class AccountViewModel(val repository: AccountRepository,application: Application): AndroidViewModel(application) {
+    val getAuthUser: LiveData<Resource<AuthResponse?>> = repository.getSession()
+    private val context = getApplication<Application>().applicationContext
+    var sharedPreferences: SharedPreferences
 
-    val sharedPreferences:SharedPreferences?=null
-    val getToken=sharedPreferences?.get("AuthToken","Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImMyYzIzMThiYWY3ZmE4YzA5NDZkN2YwYTczMzQzY2M3OWU1MTU0ZDkwZGU1NTRhMTBhZDM3YmRlOGE5OWY4YzlhODkzOGU2NWY0NmM0Y2U4In0.eyJhdWQiOiIzIiwianRpIjoiYzJjMjMxOGJhZjdmYThjMDk0NmQ3ZjBhNzMzNDNjYzc5ZTUxNTRkOTBkZTU1NGExMGFkMzdiZGU4YTk5ZjhjOWE4OTM4ZTY1ZjQ2YzRjZTgiLCJpYXQiOjE1Njg4ODA4NTIsIm5iZiI6MTU2ODg4MDg1MiwiZXhwIjoxNjAwNTAzMjUyLCJzdWIiOiI2MSIsInNjb3BlcyI6W119.WxofHLRmYxhZJc8T_pZAiN7OgTEXBwkIlo5k-WZgPasVJ0VitIP8R7VE5wv9tdf4zuvpo8vzQA2lxOR2n5Rk4YV3J4OrFgp8QcKOmaFxtM6sxoC82Pe2BubXdh-e-7LhnBMo8xfrEzaSmrghS5tuEWb6DNEHtcPRhHq3XXo5vA0HiE9Lc4_d7fiqtPezVWy_C-jFlZSORKkE3z1Xp8kt21xLkf2AcJtFX5xKCW9SOhRwivLU0JxOcwMT_jzmCHkZiML-lskjt-Coo2PrqRlnwibowJ_0xtkmH2Q-xa1_CBBeQoc0lEX-9H3ERfE-HsKjvpVCeYk5HK8Xj3NGwrWNKIOSNgYfIVSXU-bMKaMUQ8yFhgvqYxscPOEUhyLP6FDwHPhXgAZeH9dXdCPBke-l_2xdCN7LLRW2VBbq204vk_qlIcZTC0mEmSjvZlrjNmNdYm8t-0lPsX6t04uylYN5Z66rj9cbWKTV2vLsqO_NmAUKepgIn2dD8OL606ik35KKsF89QUV9CjJ7WFKH09lWDDu-qyKF5b9VOXiJeSln5A4zBMSTE2WcBIhZb6evGGpVWYV70NVdxqiboWG15U6MrH5KOq4iPdcxZ2aN24kZ6p0fMnAntm_YXgwWxQSuUJMfLrENUBgl7JBafnuuJEjnVkLTbFpZVFXMWBgVjXYXtfo")
+    init {
+        sharedPreferences = context.getSharedPreferences("mypref", Context.MODE_PRIVATE)
+    }
+//getting token for localstorage
+    //Todo pratice is to encrypt it but to reduce complexities i cant
+    val getToken = sharedPreferences.get("AuthToken", "default value")
 
-    fun getUser(){
+    fun getUser() {
         viewModelScope.launch {
-            repository.getUser("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6ImMyYzIzMThiYWY3ZmE4YzA5NDZkN2YwYTczMzQzY2M3OWU1MTU0ZDkwZGU1NTRhMTBhZDM3YmRlOGE5OWY4YzlhODkzOGU2NWY0NmM0Y2U4In0.eyJhdWQiOiIzIiwianRpIjoiYzJjMjMxOGJhZjdmYThjMDk0NmQ3ZjBhNzMzNDNjYzc5ZTUxNTRkOTBkZTU1NGExMGFkMzdiZGU4YTk5ZjhjOWE4OTM4ZTY1ZjQ2YzRjZTgiLCJpYXQiOjE1Njg4ODA4NTIsIm5iZiI6MTU2ODg4MDg1MiwiZXhwIjoxNjAwNTAzMjUyLCJzdWIiOiI2MSIsInNjb3BlcyI6W119.WxofHLRmYxhZJc8T_pZAiN7OgTEXBwkIlo5k-WZgPasVJ0VitIP8R7VE5wv9tdf4zuvpo8vzQA2lxOR2n5Rk4YV3J4OrFgp8QcKOmaFxtM6sxoC82Pe2BubXdh-e-7LhnBMo8xfrEzaSmrghS5tuEWb6DNEHtcPRhHq3XXo5vA0HiE9Lc4_d7fiqtPezVWy_C-jFlZSORKkE3z1Xp8kt21xLkf2AcJtFX5xKCW9SOhRwivLU0JxOcwMT_jzmCHkZiML-lskjt-Coo2PrqRlnwibowJ_0xtkmH2Q-xa1_CBBeQoc0lEX-9H3ERfE-HsKjvpVCeYk5HK8Xj3NGwrWNKIOSNgYfIVSXU-bMKaMUQ8yFhgvqYxscPOEUhyLP6FDwHPhXgAZeH9dXdCPBke-l_2xdCN7LLRW2VBbq204vk_qlIcZTC0mEmSjvZlrjNmNdYm8t-0lPsX6t04uylYN5Z66rj9cbWKTV2vLsqO_NmAUKepgIn2dD8OL606ik35KKsF89QUV9CjJ7WFKH09lWDDu-qyKF5b9VOXiJeSln5A4zBMSTE2WcBIhZb6evGGpVWYV70NVdxqiboWG15U6MrH5KOq4iPdcxZ2aN24kZ6p0fMnAntm_YXgwWxQSuUJMfLrENUBgl7JBafnuuJEjnVkLTbFpZVFXMWBgVjXYXtfo")
+            repository.getUser("Bearer $getToken")
         }
 
     }
 
+    fun attemptImageUpload(AuthToken:String,avatar:String,file: MultipartBody.Part){
+        viewModelScope.launch {
+            repository.uploadimage(AuthToken,avatar,file)
+        }
+        Log.d("any ","=============token is $AuthToken")
+    }
 }
