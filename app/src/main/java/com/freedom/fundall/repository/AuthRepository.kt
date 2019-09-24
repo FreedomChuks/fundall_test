@@ -15,7 +15,7 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
 
     fun getAuthResource():LiveData<Resource<AuthResponse?>> = usersession
 
-    //to standerd error handing just not to increase complexities
+    //to standerd loading handing just not to increase complexities
     suspend fun LoginUser(email:String,password:String){
 
         withContext(IO){
@@ -31,14 +31,14 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
             }catch (e:Exception){
                usersession.error(e.localizedMessage!!)
             }catch (h: HttpException){
-                Log.d("Tag","http-error :${h.message()}")
+                Log.d("Tag","http-loading :${h.message()}")
             }
 
 
         }
     }
 
-    //to standerd error handing just not to increase complesity
+    //to standerd loading handing just not to increase complesity
     suspend fun SignupUser(firstname:String,lastname:String,email: String,password: String,confirmpassword:String){
         withContext(IO){
             try {
@@ -53,7 +53,7 @@ class AuthRepository (val api:ApiServices,val usersession:session) {
             }catch (e:Exception){
                 usersession.error(e.localizedMessage!!)
             }catch (h: HttpException){
-                Log.d("Tag","http-error :${h.message()}")
+                Log.d("Tag","http-loading :${h.message()}")
             }
 
 

@@ -42,7 +42,7 @@ class Login : AppCompatActivity(),ViewState {
         loadingDialoge= LoadingDialoge()
         subscribeObservers()
     }
-
+//used saveprefence in a real world application responses are stored in a localdb as a cached storage
     fun subscribeObservers() {
         authviewmodel.response.observe(this, Observer {
             when(it){

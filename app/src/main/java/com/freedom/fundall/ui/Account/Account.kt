@@ -3,33 +3,27 @@ package com.freedom.fundall.ui.Account
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.freedom.fundall.R
 import com.freedom.fundall.ui.LoadingDialoge
 import com.freedom.fundall.utils.Resource
+import com.freedom.fundall.utils.get
 import com.freedom.fundall.utils.toast
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.github.florent37.inlineactivityresult.InlineActivityResult.startForResult
-import com.github.florent37.inlineactivityresult.kotlin.startForResult
 import kotlinx.android.synthetic.main.fragment_account.*
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 
@@ -40,6 +34,7 @@ class Account : Fragment() {
     lateinit var sharedPreferences: SharedPreferences
     lateinit var requestimage:MultipartBody.Part
     lateinit var  loadingDialoge: LoadingDialoge
+    lateinit var requestOptions: RequestOptions
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +49,10 @@ class Account : Fragment() {
         loadingDialoge= LoadingDialoge()
         viewmodel=ViewModelProvider(this)[accountViewModel::class.java]
         viewmodel.getUser()
+        requestOptions= RequestOptions()
+            .placeholder(R.drawable.loading)
+            .error(R.drawable.error)
+
 
 
     }
@@ -67,8 +66,6 @@ class Account : Fragment() {
 
     fun changeImage(){
         val AuthToken=sharedPreferences.getString("AuthToken","Token")
-//        val requestBody:RequestBody=
-//            "avatar".toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
 
         ImagePicker.with(this)
@@ -101,29 +98,27 @@ return@start
     fun SubscibeObserver(){
         viewmodel.getAuthUser.observe(viewLifecycleOwner, Observer {
             when(it){
-                is Resource.Loading -> {showDialog()}
+                is Resource.Loading -> {Glide.with(this).applyDefaultRequestOptions(requestOptions)}
                 is Resource.Success -> {
-                    hideLoader()
                     context?.toast("loaded data")
-                    setDetails(it.data?.success?.data?.email,it.data?.success?.data?.firstname,it.data?.success?.data?.monthly_target.toString())
-                    if (it.data?.success?.user?.avatar ==null){
-                        Glide.with(this).load(it.data?.success?.data?.avatar).into(profile_image)
+                    setDetails()
+                    if (it.data?.success?.data?.avatar==null){
+                        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(it.data?.success?.url).into(profile_image)
                         return@Observer
                     }else{
-                        Glide.with(this).load(it.data.success.url).into(profile_image)
+                        Glide.with(this).applyDefaultRequestOptions(requestOptions).load(it.data?.success?.data.avatar).into(profile_image)
                     }
 
                 }
-                is Resource.Failure -> {hideLoader();context?.toast("error loading data")}
+                is Resource.Failure -> {hideLoader();context?.toast("loading error data")}
             }
         })
 
     }
 
-    fun setDetails(email:String?,firstname:String?,amount:String?){
-        emailforuser.text=email
-        firstnameforuser.text=firstname
-        amountforuser.text=amount
+    fun setDetails(){
+        emailforuser.text=sharedPreferences.get("Email","xxxxx@gmail.com")
+        firstnameforuser.text=sharedPreferences.get("Username","defaultdata")
     }
 
     private fun showDialog(){
